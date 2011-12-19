@@ -26,6 +26,7 @@ public final class R {
     public static final class layout {
         public static final int main=0x7f030000;
         public static final int pull_refresh_header=0x7f030001;
+        public static final int simple_list_item_1=0x7f030002;
     }
     public static final class string {
         public static final int app_name=0x7f040004;

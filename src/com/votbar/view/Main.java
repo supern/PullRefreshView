@@ -3,7 +3,7 @@ package com.votbar.view;
 import java.util.Arrays;
 import java.util.LinkedList;
 
-import com.votbar.view.PullRefreshView.OnRefreshListener;
+import com.votbar.view.PullRefreshView.RefreshListener;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -23,13 +23,14 @@ public class Main extends Activity {
         mListItems.addAll(Arrays.asList(mStrings));
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1, mListItems);
+                R.layout.simple_list_item_1, mListItems);
 
         ListView listView = (ListView) findViewById(R.id.ListView);
         listView.setAdapter(adapter);
         
         final PullRefreshView pullRefreshView = (PullRefreshView) findViewById(R.id.pull);
-        pullRefreshView.setRefreshListener(new OnRefreshListener() {
+        pullRefreshView.setEnablePull(true);
+        pullRefreshView.setRefreshListener(new RefreshListener() {
 			
 			@Override
 			public void onRefresh() {
@@ -38,7 +39,7 @@ public class Main extends Activity {
 					@Override
 					public void run() {
 						try {
-							Thread.sleep(3000);
+							Thread.sleep(30000);
 						} catch (InterruptedException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
