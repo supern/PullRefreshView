@@ -22,8 +22,6 @@ import android.widget.TextView;
  */
 public class PullRefreshView extends FrameLayout implements OnGestureListener,
 		AnimationListener {
-	private static final int MAX_MARGIN = 100;
-
 	private static final byte STATE_CLOSE = 0;
 	private static final byte STATE_OPEN = STATE_CLOSE + 1;
 	private static final byte STATE_OVER = STATE_OPEN + 1;
@@ -47,6 +45,7 @@ public class PullRefreshView extends FrameLayout implements OnGestureListener,
 
 	private int mLastY;
 	private int mMargin;
+	private int mMaxMagin;
 
 	private boolean mEnablePull;
 
@@ -80,8 +79,10 @@ public class PullRefreshView extends FrameLayout implements OnGestureListener,
 	private void init() {
 		View mOverView = inflate(getContext(), R.layout.pull_refresh_header,
 				null);
-		addView(mOverView);
-		mMargin = MAX_MARGIN;
+		FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.FILL_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT);
+		addView(mOverView,params);
+		mOverView.measure(0, 0);
+		mMargin = mMaxMagin = mOverView.getMeasuredHeight();
 
 		mRefreshView = mOverView.findViewById(R.id.refresh);
 		mLoadingView = mOverView.findViewById(R.id.loading);
@@ -150,9 +151,9 @@ public class PullRefreshView extends FrameLayout implements OnGestureListener,
 	}
 
 	private void release(int dis) {
-		if (mRefreshListener != null && dis > MAX_MARGIN) {
+		if (mRefreshListener != null && dis > mMaxMagin) {
 			mState = STATE_OVER_RELEASE;
-			mFlinger.recover(dis - MAX_MARGIN);
+			mFlinger.recover(dis - mMaxMagin);
 		} else {
 			mState = STATE_OPEN_RELEASE;
 			mFlinger.recover(dis);
@@ -178,8 +179,8 @@ public class PullRefreshView extends FrameLayout implements OnGestureListener,
 		View head = getChildAt(0);
 		if (ev.getAction() == MotionEvent.ACTION_UP) {
 			if (head.getBottom() > 0) {
-				if (mState == STATE_REFRESH && head.getBottom() > MAX_MARGIN) {
-					release(head.getBottom() - MAX_MARGIN);
+				if (mState == STATE_REFRESH && head.getBottom() > mMaxMagin) {
+					release(head.getBottom() - mMaxMagin);
 					return false;
 				} else if (mState != STATE_REFRESH) {
 					release(head.getBottom());
@@ -250,8 +251,8 @@ public class PullRefreshView extends FrameLayout implements OnGestureListener,
 		View child = getChildAt(1);
 		int y = child.getTop();
 		if (mState == STATE_REFRESH) {
-			head.layout(left, y, right, y + MAX_MARGIN);
-			child.layout(left, y + MAX_MARGIN, right, bottom + MAX_MARGIN);
+			head.layout(left, y, right, y + mMaxMagin);
+			child.layout(left, y + mMaxMagin, right, bottom + mMaxMagin);
 		} else {
 			head.layout(left, y - mMargin, right, y);
 			child.layout(left, y, right, bottom + y);
@@ -275,7 +276,7 @@ public class PullRefreshView extends FrameLayout implements OnGestureListener,
 			child.offsetTopAndBottom(dis);
 			if(mState!=STATE_REFRESH)
 			mState = STATE_CLOSE;
-		} else if (childTop <= MAX_MARGIN) {
+		} else if (childTop <= mMaxMagin) {
 			if (mIndicatorUp) {
 				playAnim(false);
 			}
