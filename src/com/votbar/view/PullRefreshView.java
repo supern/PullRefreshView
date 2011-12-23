@@ -251,8 +251,8 @@ public class PullRefreshView extends FrameLayout implements OnGestureListener,
 		View child = getChildAt(1);
 		int y = child.getTop();
 		if (mState == STATE_REFRESH) {
-			head.layout(left, y, right, y + mMaxMagin);
-			child.layout(left, y + mMaxMagin, right, bottom + mMaxMagin);
+			head.layout(left, top, right, top + mMaxMagin);
+			child.layout(left, top + mMaxMagin, right, bottom + mMaxMagin);
 		} else {
 			head.layout(left, y - mMargin, right, y);
 			child.layout(left, y, right, bottom + y);
@@ -284,7 +284,7 @@ public class PullRefreshView extends FrameLayout implements OnGestureListener,
 			child.offsetTopAndBottom(dis);
 			if (changeState&&mState!=STATE_REFRESH)
 				mState = STATE_OPEN;
-			else if (dis == 0 && mState == STATE_OVER_RELEASE) {
+			else if (mState == STATE_OVER_RELEASE) {
 				refresh();
 			}
 		} else if(mState!=STATE_REFRESH){
