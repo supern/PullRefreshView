@@ -247,22 +247,22 @@ public class PullRefreshView extends FrameLayout implements OnGestureListener,
 	@Override
 	protected void onLayout(boolean changed, int left, int top, int right,
 			int bottom) {
-		View head = getChildAt(0);
-		View child = getChildAt(1);
-		int y = child.getTop();
-		if (mState == STATE_REFRESH) {
-			head.layout(left, top, right, top + mMaxMagin);
-			child.layout(left, top + mMaxMagin, right, bottom + mMaxMagin);
-		} else {
-			head.layout(left, y - mMargin, right, y);
-			child.layout(left, y, right, bottom + y);
-		}
+        View head = getChildAt(0);
+        View child = getChildAt(1);
+        int y = child.getTop();
+        if (mState == STATE_REFRESH) {
+            head.layout(left, 0, right, mMaxMagin);
+            child.layout(left, mMaxMagin, right, child.getMeasuredHeight());
+        } else {
+            head.layout(left, y - mMargin, right, y);
+            child.layout(left, y, right, child.getMeasuredHeight());
+        }
 
-		View other = null;
-		for (int i = 2; i < getChildCount(); ++i) {
-			other = getChildAt(i);
-			other.layout(left, top, right, bottom);
-		}
+        View other = null;
+        for (int i = 2; i < getChildCount(); ++i) {
+            other = getChildAt(i);
+            other.layout(left, top, right, bottom);
+        }
 	}
 
 	public boolean moveDown(int dis, boolean changeState) {
